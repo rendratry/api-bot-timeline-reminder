@@ -43,11 +43,11 @@ func GetOffice() Presensi {
 	return office
 }
 
-func GetIssuer(emailIss interface{}) bool {
+func GetIssuer(Iss interface{}) bool {
 	tx := GetConnection2()
 	ctx := context.Background()
-	script := "select email from user where email = ?"
-	rows, err := tx.QueryContext(ctx, script, emailIss)
+	script := "select id from admin where id = ?"
+	rows, err := tx.QueryContext(ctx, script, Iss)
 	PanicIfError(err)
 	defer rows.Close()
 

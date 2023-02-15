@@ -104,14 +104,13 @@ func TestJwtCreate(t *testing.T) {
 }
 
 func TestJwtValidate(t *testing.T) {
-	tokenString := "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NzU5MzU3MjYsImlhdCI6MTY3NTkzNTY5NiwiaXNzIjoiUmVuZHJhIiwic3ViIjoiUmVuZHJhIn0.nAD-Z7YsZ-6TcWaAlsQ3audW32AqXxuV_yAr-PqpWzQ"
-	// Verify the token with a secret ke
+	tokenString := "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NzY3NjE4OTIsImlhdCI6MTY3NjQ3Mzg5MiwiaXNzIjoiYm90LnRpbWVsaW5lLnJlbWluZGVyIiwic3ViIjoiYTNlMjI0ZjEtMTI5My00ODcyLTg1N2ItYmNmM2QyZGMzNzMwIn0.x1gphh_lz4SFUAbOKxW7cFLah6eboFbrsF59HfooKI8"
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])
 		}
 
-		return []byte("secret-key"), nil
+		return []byte("admin-bot-timeline"), nil
 	})
 
 	if err != nil {

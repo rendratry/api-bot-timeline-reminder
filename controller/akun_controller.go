@@ -10,4 +10,6 @@ type AkunController interface {
 	CreateAdmin(writer http.ResponseWriter, request *http.Request, params httprouter.Params)
 	RegisterBot(writer http.ResponseWriter, request *http.Request, params httprouter.Params)
 	LoginUser(writer http.ResponseWriter, request *http.Request, params httprouter.Params)
+	InsertDataMahasiswa(writer http.ResponseWriter, request *http.Request, params httprouter.Params)
+	InsertDataStaff(writer http.ResponseWriter, request *http.Request, params httprouter.Params)
 }

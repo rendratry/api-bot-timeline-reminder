@@ -15,6 +15,8 @@ func NewRouter(
 	router.POST("/bot/api/adminlogin", AkunController.LoginAdmin)
 	router.POST("/bot/api/registerbot", AkunController.RegisterBot)
 	router.POST("/bot/api/userlogin", AkunController.LoginUser)
+	router.POST("/bot/api/insertdatamahasiswa", AkunController.InsertDataMahasiswa)
+	router.POST("/bot/api/insertdatastaff", AkunController.InsertDataStaff)
 
 	router.PanicHandler = exception.ErrorHandler
 

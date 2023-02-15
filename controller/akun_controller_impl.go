@@ -30,7 +30,7 @@ func (controller *AkunControllerImpl) LoginAdmin(writer http.ResponseWriter, req
 		Data:   loginResponse,
 	}
 
-	jwt := helper.CreateNewJWT("bot.timeline.reminder", loginRequest.Username, "admin-bot-timeline", time.Hour*80)
+	jwt := helper.CreateNewJWT("bot.timeline.reminder", loginResponse.IdUser, "admin-bot-timeline", time.Hour*80)
 	helper.WriteToResponseBodyWithJWT(writer, webResponse, jwt)
 }
 
@@ -45,7 +45,7 @@ func (controller *AkunControllerImpl) CreateAdmin(writer http.ResponseWriter, re
 		Data:   akunResponse,
 	}
 
-	jwt := helper.CreateNewJWT("bot.timeline.reminder", akunCreateRequest.Username, "admin-bot-timeline", time.Hour*80)
+	jwt := helper.CreateNewJWT("bot.timeline.reminder", akunResponse.IdUser, "admin-bot-timeline", time.Hour*80)
 	helper.WriteToResponseBodyWithJWT(writer, webResponse, jwt)
 }
 
@@ -74,6 +74,32 @@ func (controller *AkunControllerImpl) LoginUser(writer http.ResponseWriter, requ
 		Data:   loginResponse,
 	}
 
-	jwt := helper.CreateNewJWT("bot.timeline.reminder", loginRequest.Email, "admin-bot-timeline", time.Hour*80)
+	jwt := helper.CreateNewJWT("bot.timeline.reminder", loginResponse.IdUser, "admin-bot-timeline", time.Hour*80)
 	helper.WriteToResponseBodyWithJWT(writer, webResponse, jwt)
+}
+
+func (controller *AkunControllerImpl) InsertDataMahasiswa(writer http.ResponseWriter, request *http.Request, params httprouter.Params) {
+	insertDataRequest := web.InsertDataMahasiswaRequest{}
+	helper.ReadFromRequestBody(request, &insertDataRequest)
+
+	insertDataResponse := controller.AkunService.InsertDataMahasiswa(request.Context(), insertDataRequest)
+	webResponse := web.WebResponse{
+		Code:   200,
+		Status: "OK",
+		Data:   insertDataResponse,
+	}
+	helper.WriteToResponseBody(writer, webResponse)
+}
+
+func (controller *AkunControllerImpl) InsertDataStaff(writer http.ResponseWriter, request *http.Request, params httprouter.Params) {
+	insertDataRequest := web.InsertDataStaffRequest{}
+	helper.ReadFromRequestBody(request, &insertDataRequest)
+
+	insertDataResponse := controller.AkunService.InsertDataStaff(request.Context(), insertDataRequest)
+	webResponse := web.WebResponse{
+		Code:   200,
+		Status: "OK",
+		Data:   insertDataResponse,
+	}
+	helper.WriteToResponseBody(writer, webResponse)
 }

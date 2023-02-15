@@ -4,6 +4,7 @@ import (
 	"api-bot-timeline-reminder/helper"
 	"api-bot-timeline-reminder/model/domain"
 	"api-bot-timeline-reminder/model/web"
+	"log"
 	"net/http"
 )
 
@@ -21,8 +22,9 @@ func (middleware *AuthMiddleware) ServeHTTP(writer http.ResponseWriter, request 
 	if request.Header.Get("Authorization") != "" {
 		jwt := request.Header.Get("Authorization")
 		iss := domain.JwtClaims{}
-		iss = helper.ValidateJWT(jwt, "secret-key")
+		iss = helper.ValidateJWT(jwt, "admin-bot-timeline")
 		status := helper.GetIssuer(iss.Subject)
+		log.Println(iss.Subject)
 		if status {
 			// ok
 			middleware.Handler.ServeHTTP(writer, request)

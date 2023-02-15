@@ -169,7 +169,7 @@ func (service *AkunServiceImpl) InsertDataMahasiswa(ctx context.Context, request
 	return helper.ToInserDataMahasiswaResponse(insert)
 }
 
-func (service *AkunServiceImpl) InsertDataDosen(ctx context.Context, request web.InsertDataStaffRequest) web.InsertDataStaffResponse {
+func (service *AkunServiceImpl) InsertDataStaff(ctx context.Context, request web.InsertDataStaffRequest) web.InsertDataStaffResponse {
 	err := service.Validate.Struct(request)
 	helper.PanicIfError(err)
 	tx, err := service.DB.Begin()
