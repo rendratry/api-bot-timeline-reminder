@@ -42,7 +42,8 @@ func (middleware *AuthMiddleware) ServeHTTP(writer http.ResponseWriter, request 
 		}
 	} else {
 		if request.URL.Path == "/bot/api/adminlogin" || request.URL.Path == "/bot/api/adminregister" ||
-			request.URL.Path == "/bot/api/registerbot" || request.URL.Path == "/bot/api/userlogin" {
+			request.URL.Path == "/bot/api/registerbot" || request.URL.Path == "/bot/api/userlogin" ||
+			request.URL.Path == "/bot/api/sendotp" || request.URL.Path == "/bot/api/otpvalidation" {
 			if request.Header.Get("X-Api-Key") == "12345678" {
 				// ok
 				middleware.Handler.ServeHTTP(writer, request)

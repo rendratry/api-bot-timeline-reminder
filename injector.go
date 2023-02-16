@@ -24,11 +24,21 @@ var akunSet = wire.NewSet(
 	wire.Bind(new(controller.AkunController), new(*controller.AkunControllerImpl)),
 )
 
+var otpSet = wire.NewSet(
+	repository.NewOtpRepositoryImpl,
+	wire.Bind(new(repository.OtpRepository), new(*repository.OtpRepositoryImpl)),
+	service.NewOtpServiceImpl,
+	wire.Bind(new(service.OtpService), new(*service.OtpServiceImpl)),
+	controller.NewOtpControllerImpl,
+	wire.Bind(new(controller.OtpController), new(*controller.OtpControllerImpl)),
+)
+
 func InitializedServer() *http.Server {
 	wire.Build(
 		app.GetConnection,
 		validator.New,
 		akunSet,
+		otpSet,
 		app.NewRouter,
 		wire.Bind(new(http.Handler), new(*httprouter.Router)),
 		middleware.NewAuthMiddleware,

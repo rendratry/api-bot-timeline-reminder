@@ -10,7 +10,7 @@ import (
 func SendEmail(subject string, email string, message string) {
 	const CONFIG_SMTP_HOST = "mail.masuk.email"
 	const CONFIG_SMTP_PORT = 465
-	const CONFIG_SENDER_NAME = "Service Myfin <service@myfin.id>"
+	const CONFIG_SENDER_NAME = "Service Bot D3 TI PSDKU <service@myfin.id>"
 	const CONFIG_AUTH_EMAIL = "service@myfin.id"
 	const CONFIG_AUTH_PASSWORD = "Adminmyfin123"
 

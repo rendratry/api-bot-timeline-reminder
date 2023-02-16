@@ -25,7 +25,10 @@ func InitializedServer() *http.Server {
 	validate := validator.New()
 	akunServiceImpl := service.NewUserServiceImpl(akunRepositoryImpl, db, validate)
 	akunControllerImpl := controller.NewAkunControllerImpl(akunServiceImpl)
-	router := app.NewRouter(akunControllerImpl)
+	otpRepositoryImpl := repository.NewOtpRepositoryImpl()
+	otpServiceImpl := service.NewOtpServiceImpl(otpRepositoryImpl, db, validate)
+	otpControllerImpl := controller.NewOtpControllerImpl(otpServiceImpl)
+	router := app.NewRouter(akunControllerImpl, otpControllerImpl)
 	authMiddleware := middleware.NewAuthMiddleware(router)
 	server := NewServer(authMiddleware)
 	return server
@@ -34,3 +37,5 @@ func InitializedServer() *http.Server {
 // injector.go:
 
 var akunSet = wire.NewSet(repository.NewAkunRepositoryImpl, wire.Bind(new(repository.AkunRepository), new(*repository.AkunRepositoryImpl)), service.NewUserServiceImpl, wire.Bind(new(service.AkunService), new(*service.AkunServiceImpl)), controller.NewAkunControllerImpl, wire.Bind(new(controller.AkunController), new(*controller.AkunControllerImpl)))
+
+var otpSet = wire.NewSet(repository.NewOtpRepositoryImpl, wire.Bind(new(repository.OtpRepository), new(*repository.OtpRepositoryImpl)), service.NewOtpServiceImpl, wire.Bind(new(service.OtpService), new(*service.OtpServiceImpl)), controller.NewOtpControllerImpl, wire.Bind(new(controller.OtpController), new(*controller.OtpControllerImpl)))

@@ -61,3 +61,18 @@ func ToInserDataStaffResponse(staff domain.Staff) web.InsertDataStaffResponse {
 		Status: "insert berhasil",
 	}
 }
+
+func ToOtpResponse(otp domain.Otp) web.OtpResponse {
+	return web.OtpResponse{
+		Email:  otp.Email,
+		NoHp:   otp.NoHp,
+		Status: "OTP Terkirim",
+	}
+}
+
+func ToOtpValidationResponse(otp domain.Otp) web.OtpValidationResponse {
+	return web.OtpValidationResponse{
+		Email:  otp.Email,
+		Status: otp.Status,
+	}
+}
