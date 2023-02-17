@@ -9,6 +9,7 @@ import (
 func NewRouter(
 	AkunController controller.AkunController,
 	OtpController controller.OtpController,
+	ChatbotController controller.ChatbotController,
 ) *httprouter.Router {
 	router := httprouter.New()
 
@@ -20,6 +21,7 @@ func NewRouter(
 	router.POST("/bot/api/insertdatastaff", AkunController.InsertDataStaff)
 	router.POST("/bot/api/sendotp", OtpController.SendOtp)
 	router.POST("/bot/api/otpvalidation", OtpController.VerifikasiOtp)
+	router.POST("/bot/api/getchatbotmessages", ChatbotController.GetAllMessages)
 
 	router.PanicHandler = exception.ErrorHandler
 

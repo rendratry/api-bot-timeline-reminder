@@ -151,3 +151,7 @@ func TestGetUUID(t *testing.T) {
 func TestValidateJWT(t *testing.T) {
 	helper.ValidateJWT("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NzU5MzA5MDgsImlhdCI6MTY3NTkzMDg3OCwiaXNzIjoiUmVuZHJhIiwic3ViIjoiUmVuZHJhIn0.pmyVijF9GrEHIPZk6__MeCQMTFTwJ81DOi1dNIUyCvw", "secret")
 }
+
+func TestUploadPdf(t *testing.T) {
+
+}

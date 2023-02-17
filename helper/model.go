@@ -76,3 +76,23 @@ func ToOtpValidationResponse(otp domain.Otp) web.OtpValidationResponse {
 		Status: otp.Status,
 	}
 }
+
+func ToGetMessagesResponse(messages domain.ChatbotMessages) web.GetChatbotMessagesResponse {
+	return web.GetChatbotMessagesResponse{
+		Id:       messages.Id,
+		Tag1:     messages.Tag1,
+		Tag2:     messages.Tag2,
+		Tag3:     messages.Tag3,
+		Tag4:     messages.Tag4,
+		Tag5:     messages.Tag5,
+		Messages: messages.Messages,
+	}
+}
+
+func ToGetMessagesResponses(messages []domain.ChatbotMessages) []web.GetChatbotMessagesResponse {
+	var getMessages []web.GetChatbotMessagesResponse
+	for _, allMessages := range messages {
+		getMessages = append(getMessages, ToGetMessagesResponse(allMessages))
+	}
+	return getMessages
+}
