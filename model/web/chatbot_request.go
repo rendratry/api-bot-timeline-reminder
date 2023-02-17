@@ -1,6 +1,6 @@
 package web
 
 type GetChatbotMessagesRequest struct {
-	Limit  int `validate:"required" json:"limit"`
-	Offset int `validate:"required" json:"offset"`
+	Limit  int    `validate:"required" json:"limit"`
+	Offset string `validate:"required" json:"offset"`
 }

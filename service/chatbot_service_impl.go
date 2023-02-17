@@ -1,6 +1,7 @@
 package service
 
 import (
+	"api-bot-timeline-reminder/exception"
 	"api-bot-timeline-reminder/helper"
 	"api-bot-timeline-reminder/model/domain"
 	"api-bot-timeline-reminder/model/web"
@@ -8,6 +9,7 @@ import (
 	"context"
 	"database/sql"
 	"github.com/go-playground/validator/v10"
+	"strconv"
 )
 
 type ChatbotServiceImpl struct {
@@ -32,9 +34,13 @@ func (service *ChatbotServiceImpl) GetAllMessages(ctx context.Context, request w
 	helper.PanicIfError(err)
 	defer helper.CommitOrRollback(tx)
 
+	offset, err := strconv.Atoi(request.Offset)
+	if err != nil {
+		panic(exception.NewNotFoundError("offset harus angka"))
+	}
 	getMessages := domain.ChatbotMessages{
 		Limit:  request.Limit,
-		Offset: request.Offset,
+		Offset: offset,
 	}
 
 	getAllMessages := service.ChatbotRepository.GetAllMessage(ctx, tx, getMessages)

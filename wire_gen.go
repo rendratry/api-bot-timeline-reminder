@@ -28,7 +28,10 @@ func InitializedServer() *http.Server {
 	otpRepositoryImpl := repository.NewOtpRepositoryImpl()
 	otpServiceImpl := service.NewOtpServiceImpl(otpRepositoryImpl, db, validate)
 	otpControllerImpl := controller.NewOtpControllerImpl(otpServiceImpl)
-	router := app.NewRouter(akunControllerImpl, otpControllerImpl)
+	chatbotRepositoryImpl := repository.NewChatbotRepositoryImpl()
+	chatbotServiceImpl := service.NewChatbotService(chatbotRepositoryImpl, db, validate)
+	chatbotControllerImpl := controller.NewChatbotController(chatbotServiceImpl)
+	router := app.NewRouter(akunControllerImpl, otpControllerImpl, chatbotControllerImpl)
 	authMiddleware := middleware.NewAuthMiddleware(router)
 	server := NewServer(authMiddleware)
 	return server
@@ -39,3 +42,5 @@ func InitializedServer() *http.Server {
 var akunSet = wire.NewSet(repository.NewAkunRepositoryImpl, wire.Bind(new(repository.AkunRepository), new(*repository.AkunRepositoryImpl)), service.NewUserServiceImpl, wire.Bind(new(service.AkunService), new(*service.AkunServiceImpl)), controller.NewAkunControllerImpl, wire.Bind(new(controller.AkunController), new(*controller.AkunControllerImpl)))
 
 var otpSet = wire.NewSet(repository.NewOtpRepositoryImpl, wire.Bind(new(repository.OtpRepository), new(*repository.OtpRepositoryImpl)), service.NewOtpServiceImpl, wire.Bind(new(service.OtpService), new(*service.OtpServiceImpl)), controller.NewOtpControllerImpl, wire.Bind(new(controller.OtpController), new(*controller.OtpControllerImpl)))
+
+var chatbotSet = wire.NewSet(repository.NewChatbotRepositoryImpl, wire.Bind(new(repository.ChatbotRepository), new(*repository.ChatbotRepositoryImpl)), service.NewChatbotService, wire.Bind(new(service.ChatbotService), new(*service.ChatbotServiceImpl)), controller.NewChatbotController, wire.Bind(new(controller.ChatbotController), new(*controller.ChatbotControllerImpl)))

@@ -33,10 +33,20 @@ var otpSet = wire.NewSet(
 	wire.Bind(new(controller.OtpController), new(*controller.OtpControllerImpl)),
 )
 
+var chatbotSet = wire.NewSet(
+	repository.NewChatbotRepositoryImpl,
+	wire.Bind(new(repository.ChatbotRepository), new(*repository.ChatbotRepositoryImpl)),
+	service.NewChatbotService,
+	wire.Bind(new(service.ChatbotService), new(*service.ChatbotServiceImpl)),
+	controller.NewChatbotController,
+	wire.Bind(new(controller.ChatbotController), new(*controller.ChatbotControllerImpl)),
+)
+
 func InitializedServer() *http.Server {
 	wire.Build(
 		app.GetConnection,
 		validator.New,
+		chatbotSet,
 		akunSet,
 		otpSet,
 		app.NewRouter,
