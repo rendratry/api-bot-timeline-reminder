@@ -9,7 +9,7 @@ import (
 
 func TestPublish1(t *testing.T) {
 	//rabbitMq := app.RabbitMqConn()
-	conn, err := amqp.Dial("amqp://admin:Adminmyfin123@api.myfin.id:5672/")
+	conn, err := amqp.Dial("amqp://amqp://admin:admin@localhost:5672/")
 	if err != nil {
 		log.Fatal("Error connecting to RabbitMQ: ", err)
 	}
@@ -50,7 +50,7 @@ func TestPublish1(t *testing.T) {
 
 func TestPublish2(t *testing.T) {
 	//rabbitMq := app.RabbitMqConn()
-	conn, err := amqp.Dial("amqp://admin:Adminmyfin123@api.myfin.id:5672/")
+	conn, err := amqp.Dial("amqp://admin:admin@localhost:5672/")
 	if err != nil {
 		log.Fatal("Error connecting to RabbitMQ: ", err)
 	}
