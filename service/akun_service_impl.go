@@ -90,7 +90,9 @@ func (service *AkunServiceImpl) RegisterBot(ctx context.Context, request web.Reg
 	str2 := helper.EncodeToString(5)
 
 	uuidstr, err := helper.GetUUIDMahasiswa(request.Email)
-	helper.PanicIfError(err)
+	if err != nil {
+		panic(exception.NewNotFoundError(err.Error()))
+	}
 	bot := domain.RegisterBot{
 		IdRegister:  str1 + "-" + str2,
 		Email:       request.Email,

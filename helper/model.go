@@ -70,6 +70,21 @@ func ToOtpResponse(otp domain.Otp) web.OtpResponse {
 	}
 }
 
+func ToPublishDelayResponse(response domain.PublishRabbitMQ) web.PublishDelayResponse {
+	return web.PublishDelayResponse{
+		ScheduledAt: response.TimeStatus,
+		Status:      "success",
+	}
+}
+
+func ToPublishSendEmailResponse(response domain.SendEmail) web.SendEmailResponse {
+	return web.SendEmailResponse{
+		Email:  response.Email,
+		Status: "email dalam proses pengiriman",
+	}
+
+}
+
 func ToOtpValidationResponse(otp domain.Otp) web.OtpValidationResponse {
 	return web.OtpValidationResponse{
 		Email:  otp.Email,

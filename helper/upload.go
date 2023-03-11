@@ -3,6 +3,8 @@ package helper
 import (
 	"encoding/base64"
 	"fmt"
+	"github.com/pkg/sftp"
+	"golang.org/x/crypto/ssh"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -57,4 +59,63 @@ func UploadPdfDocument(pdfBase64 string) string {
 	return pdfPath
 	// Mengembalikan path file PDF yang disimpan
 	//fmt.Println("PDF saved successfully at", pdfPath)
+}
+
+func ConnectToHost() (*ssh.Client, error) {
+	sshConfig := &ssh.ClientConfig{
+		User: "myfin",
+		Auth: []ssh.AuthMethod{
+			ssh.Password("Adminmyfin123"),
+		},
+		HostKeyCallback: ssh.InsecureIgnoreHostKey(),
+	}
+
+	connection, err := ssh.Dial("tcp", "api.myfin.id:22", sshConfig)
+	if err != nil {
+		return nil, err
+	}
+
+	return connection, nil
+}
+
+func UploadFile(connection *ssh.Client, fileData string, fileName string, filePath string) error {
+	sftpClient, err := sftp.NewClient(connection)
+	if err != nil {
+		return err
+	}
+	defer sftpClient.Close()
+
+	remoteFilePath := filepath.Join(filePath, fileName)
+	remoteFile, err := sftpClient.Create(remoteFilePath)
+	if err != nil {
+		return err
+	}
+	defer remoteFile.Close()
+
+	fileBytes, err := base64.StdEncoding.DecodeString(fileData)
+	if err != nil {
+		return err
+	}
+
+	_, err = remoteFile.Write(fileBytes)
+	if err != nil {
+		return err
+	}
+
+	fmt.Println("File uploaded successfully to", remoteFilePath)
+
+	return nil
+}
+
+func UploadFileToServer(base64file string, fileName string, fileType string, filePath string) error {
+	connection, err := ConnectToHost()
+	if err != nil {
+		return err
+	}
+	defer connection.Close()
+
+	fileNameFull := fileName + fileType
+
+	err = UploadFile(connection, base64file, fileNameFull, filePath)
+	return err
 }

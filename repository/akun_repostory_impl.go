@@ -40,7 +40,7 @@ func (repository *AkunRepositoryImpl) CreateAdmin(ctx context.Context, tx *sql.T
 }
 
 func (repository *AkunRepositoryImpl) RegisterBot(ctx context.Context, tx *sql.Tx, bot domain.RegisterBot) domain.RegisterBot {
-	script := "insert into bot_registrasi(id_registrasi, email, nama_lengkap, no_hp, create_at, regis_status) values (?,?,?,?,?,?)"
+	script := "insert into bot_registrasi(id_registrasi, email, nama_lengkap, no_wa, create_at, regis_status) values (?,?,?,?,?,?)"
 	_, err := tx.ExecContext(ctx, script, bot.IdRegister, bot.Email, bot.NamaLengkap, bot.NoHp, bot.CreateAt, bot.StatusRegis)
 	helper.PanicIfError(err)
 

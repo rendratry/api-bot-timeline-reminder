@@ -155,3 +155,14 @@ func TestValidateJWT(t *testing.T) {
 func TestUploadPdf(t *testing.T) {
 
 }
+
+func TestMakePassword(t *testing.T) {
+	pw, err := helper.HashPassword("123")
+	helper.PanicIfError(err)
+	fmt.Println(pw)
+}
+
+func TestUUID(t *testing.T) {
+	uuidstr := uuid.NewV4()
+	fmt.Println(uuidstr)
+}

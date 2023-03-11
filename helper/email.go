@@ -4,13 +4,12 @@ import (
 	"bytes"
 	"gopkg.in/gomail.v2"
 	"html/template"
-	"log"
 )
 
-func SendEmail(subject string, email string, message string) {
+func SendEmail(subject string, email string, message string) error {
 	const CONFIG_SMTP_HOST = "mail.masuk.email"
 	const CONFIG_SMTP_PORT = 465
-	const CONFIG_SENDER_NAME = "Service Bot D3 TI PSDKU <service@myfin.id>"
+	const CONFIG_SENDER_NAME = "Email Service D3TI PSDKU <service@myfin.id>"
 	const CONFIG_AUTH_EMAIL = "service@myfin.id"
 	const CONFIG_AUTH_PASSWORD = "Adminmyfin123"
 
@@ -28,9 +27,9 @@ func SendEmail(subject string, email string, message string) {
 	)
 	err := dialer.DialAndSend(mailer)
 	if err != nil {
-		log.Fatal(err.Error())
+		return err
 	}
-
+	return nil
 }
 
 func EmailTemplate(writer bytes.Buffer, templateOTP string, otp string) string {

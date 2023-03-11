@@ -42,10 +42,18 @@ var chatbotSet = wire.NewSet(
 	wire.Bind(new(controller.ChatbotController), new(*controller.ChatbotControllerImpl)),
 )
 
+var publishSet = wire.NewSet(
+	service.NewPublishRabbitMQServiceImpl,
+	wire.Bind(new(service.PublishRabbitMQService), new(*service.PublishRabbitMQServiceImpl)),
+	controller.NewPublishRabbitMQControllerImpl,
+	wire.Bind(new(controller.PublishRabbitMQController), new(*controller.PublishRabbitMQControllerImpl)),
+)
+
 func InitializedServer() *http.Server {
 	wire.Build(
 		app.GetConnection,
 		validator.New,
+		publishSet,
 		chatbotSet,
 		akunSet,
 		otpSet,

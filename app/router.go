@@ -10,10 +10,13 @@ func NewRouter(
 	AkunController controller.AkunController,
 	OtpController controller.OtpController,
 	ChatbotController controller.ChatbotController,
+	PublishController controller.PublishRabbitMQController,
 ) *httprouter.Router {
 	router := httprouter.New()
 
 	router.POST("/bot/api/adminregister", AkunController.CreateAdmin)
+	router.POST("/bot/api/publishdelay", PublishController.PublishDelay)
+	router.POST("/bot/api/sendemail", PublishController.SendEmail)
 	router.POST("/bot/api/adminlogin", AkunController.LoginAdmin)
 	router.POST("/bot/api/registerbot", AkunController.RegisterBot)
 	router.POST("/bot/api/userlogin", AkunController.LoginUser)

@@ -8,7 +8,7 @@ import (
 )
 
 func GetConnection2() *sql.DB {
-	db, err := sql.Open("mysql", "myfin:Admin@myfin123@tcp(103.189.234.90:3306)/bot")
+	db, err := sql.Open("mysql", "myfin:Admin@myfin123@tcp(103.189.234.90:3306)/d3ti_psdku")
 	if err != nil {
 		panic(err)
 	}
@@ -69,7 +69,7 @@ func UpdateLastAccessLoginAdmin(time string) {
 func GetUUIDMahasiswa(email string) (string, error) {
 	tx := GetConnection2()
 	ctx := context.Background()
-	script := "select uuid from user where email = ?"
+	script := "select id_mhs from mahasiswa where email = ?"
 	rows, err := tx.QueryContext(ctx, script, email)
 	PanicIfError(err)
 	defer rows.Close()
@@ -80,6 +80,35 @@ func GetUUIDMahasiswa(email string) (string, error) {
 		PanicIfError(err)
 		return uuid, nil
 	} else {
-		return uuid, errors.New("failed")
+		return uuid, errors.New("mahasiswa belum terdaftar")
 	}
+}
+
+func GetRegisteredApp(idregister string) bool {
+	tx := GetConnection2()
+	ctx := context.Background()
+	script := "select id, registered_id, app_detail from bot_registered_app where registered_id = ?"
+	rows, err := tx.QueryContext(ctx, script, idregister)
+	PanicIfError(err)
+	defer rows.Close()
+
+	if rows.Next() {
+		return true
+	} else {
+		return false
+	}
+}
+
+func LogPublishDelay(recipient string, scheduleTime int64, passTime string, wa bool, email bool, telegram bool, statusNotification bool) int {
+	tx := GetConnection2()
+	ctx := context.Background()
+	script := "insert into bot_notification_log(recipient, create_time, schedule_time, pass_time, wa, email, telegram, status_notification) values (?,?,?,?,?,?,?)"
+	createTime := time.Now().UnixNano() / int64(time.Millisecond)
+	id, err := tx.ExecContext(ctx, script, recipient, createTime, scheduleTime, passTime, wa, email, telegram, statusNotification)
+	PanicIfError(err)
+
+	lastId, err := id.LastInsertId()
+	PanicIfError(err)
+
+	return int(lastId)
 }

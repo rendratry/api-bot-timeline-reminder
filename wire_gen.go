@@ -31,7 +31,9 @@ func InitializedServer() *http.Server {
 	chatbotRepositoryImpl := repository.NewChatbotRepositoryImpl()
 	chatbotServiceImpl := service.NewChatbotService(chatbotRepositoryImpl, db, validate)
 	chatbotControllerImpl := controller.NewChatbotController(chatbotServiceImpl)
-	router := app.NewRouter(akunControllerImpl, otpControllerImpl, chatbotControllerImpl)
+	publishRabbitMQServiceImpl := service.NewPublishRabbitMQServiceImpl(validate)
+	publishRabbitMQControllerImpl := controller.NewPublishRabbitMQControllerImpl(publishRabbitMQServiceImpl)
+	router := app.NewRouter(akunControllerImpl, otpControllerImpl, chatbotControllerImpl, publishRabbitMQControllerImpl)
 	authMiddleware := middleware.NewAuthMiddleware(router)
 	server := NewServer(authMiddleware)
 	return server
@@ -44,3 +46,5 @@ var akunSet = wire.NewSet(repository.NewAkunRepositoryImpl, wire.Bind(new(reposi
 var otpSet = wire.NewSet(repository.NewOtpRepositoryImpl, wire.Bind(new(repository.OtpRepository), new(*repository.OtpRepositoryImpl)), service.NewOtpServiceImpl, wire.Bind(new(service.OtpService), new(*service.OtpServiceImpl)), controller.NewOtpControllerImpl, wire.Bind(new(controller.OtpController), new(*controller.OtpControllerImpl)))
 
 var chatbotSet = wire.NewSet(repository.NewChatbotRepositoryImpl, wire.Bind(new(repository.ChatbotRepository), new(*repository.ChatbotRepositoryImpl)), service.NewChatbotService, wire.Bind(new(service.ChatbotService), new(*service.ChatbotServiceImpl)), controller.NewChatbotController, wire.Bind(new(controller.ChatbotController), new(*controller.ChatbotControllerImpl)))
+
+var publishSet = wire.NewSet(service.NewPublishRabbitMQServiceImpl, wire.Bind(new(service.PublishRabbitMQService), new(*service.PublishRabbitMQServiceImpl)), controller.NewPublishRabbitMQControllerImpl, wire.Bind(new(controller.PublishRabbitMQController), new(*controller.PublishRabbitMQControllerImpl)))

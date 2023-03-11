@@ -1,16 +1,19 @@
 {
-  "openapi": "3.0.3",
-  "info": {
-    "title": "$Title$",
-    "description": "$Title$",
-    "version": "1.0.0"
-  },
-  "servers": [
-    {
-      "url": "$https$"
-    }
-  ],
-  "paths": {
-    $END$
-  }
+ "recipient" : "uuid",
+ "platform" : {
+  "email" : true,
+  "whatsapp" : true,
+  "telegram" : true
+ },
+ "messages" : {
+  "email" : "",
+  "whatsapp" : "",
+  "telegram" : ""
+ }
+}
+
+
+{
+ "email" : "user@mail.com",
+ "message" : "text/html"
 }
