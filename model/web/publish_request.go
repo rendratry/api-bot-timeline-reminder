@@ -19,6 +19,7 @@ type PublishDelayRequest struct {
 	FromApp      string    `validate:"required"`
 	Receiver     string    `validate:"required" json:"receiver"`
 	Message      string    `validate:"required" json:"message"`
+	EmailSubject string    `validate:"required" json:"email_subject"`
 	EmailMessage string    `validate:"required" json:"email_message"`
 	Platform     Platform  `validate:"required" json:"platform"`
 	Time         TimeDelay `validate:"required" json:"time"`

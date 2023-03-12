@@ -1,6 +1,7 @@
 package helper
 
 import (
+	"api-bot-timeline-reminder/model/domain"
 	"context"
 	"database/sql"
 	"errors"
@@ -56,6 +57,42 @@ func GetIssuer(Iss interface{}) bool {
 	} else {
 		return false
 	}
+}
+
+func GetReceiverMahasiswa(id string) (domain.NotificationReceiver, error) {
+	tx := GetConnection2()
+	ctx := context.Background()
+	script := "select bot_user_mahasiswa.no_wa, id_telegram from bot_user_mahasiswa join mahasiswa on bot_user_mahasiswa.id_mahasiswa = mahasiswa.id_mhs where bot_user_mahasiswa.id_mahasiswa = ?"
+	stmt, err := tx.PrepareContext(ctx, script)
+	PanicIfError(err)
+	defer stmt.Close()
+
+	receiver := domain.NotificationReceiver{}
+
+	err = stmt.QueryRow(1).Scan(&receiver.Whatsapp, &receiver.Telegram, &receiver.Email)
+	if err != nil {
+		return receiver, err
+	}
+
+	return receiver, nil
+}
+
+func GetReceiverStaff(id string) (domain.NotificationReceiver, error) {
+	tx := GetConnection2()
+	ctx := context.Background()
+	script := "select bot_user_staff.no_wa, id_telegram from bot_user_staff join staf on bot_user_staff.id_mahasiswa = staf.id_staf where bot_user_staff.id_staff = ?"
+	stmt, err := tx.PrepareContext(ctx, script)
+	PanicIfError(err)
+	defer stmt.Close()
+
+	receiver := domain.NotificationReceiver{}
+
+	err = stmt.QueryRow(1).Scan(&receiver.Whatsapp, &receiver.Telegram, &receiver.Email)
+	if err != nil {
+		return receiver, err
+	}
+
+	return receiver, nil
 }
 
 func UpdateLastAccessLoginAdmin(time string) {

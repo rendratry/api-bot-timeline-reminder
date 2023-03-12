@@ -6,8 +6,6 @@ import (
 	"encoding/json"
 	"github.com/streadway/amqp"
 	"log"
-	"net/http"
-	"net/url"
 )
 
 func RabbitMqConn() *amqp.Connection {
@@ -61,9 +59,41 @@ func ConsummerDelayRabbitMQ() {
 
 	// Process message
 	for msg := range msgs {
-		_, err := http.Get("https://api.telegram.org/bot5836520934:AAGQ_iQvY7Hbm5goVRPbwH-k57p25dA-Gns/SendMessage?chat_id=1133337434&text=" + url.QueryEscape(string(msg.Body)))
-		if err != nil {
-			panic(err)
+		publishDelayRequest := web.PublishDelayRequest{}
+		errr := json.Unmarshal(msg.Body, &publishDelayRequest)
+		helper.PanicIfError(errr)
+		receiver, err := helper.GetReceiver(publishDelayRequest.Receiver)
+		helper.PanicIfError(err)
+
+		// Defining the map for the platforms
+		platforms := map[string]func(){
+			"email": func() {
+				err := helper.SendEmail(publishDelayRequest.EmailSubject, receiver.Email, publishDelayRequest.EmailMessage)
+				helper.PanicIfError(err)
+			},
+			"telegram": func() {
+				helper.SendMessageTelegram(receiver.Telegram, publishDelayRequest.Message)
+			},
+			"whatsapp": func() {
+				helper.SendMessageWhatsapp(receiver.Whatsapp, publishDelayRequest.Message)
+			},
+		}
+
+		// Executing the commands based on the boolean variables
+		var a, b, c = publishDelayRequest.Platform.Email, publishDelayRequest.Platform.Telegram, publishDelayRequest.Platform.Whatsapp
+		if a {
+			platforms["email"]()
+		}
+		if b {
+			platforms["telegram"]()
+		}
+		if c {
+			platforms["whatsapp"]()
+		}
+		if a && b && c {
+			for _, platform := range platforms {
+				platform()
+			}
 		}
 		log.Printf("Received message: %s", msg.Body)
 		msg.Ack(false)
@@ -99,7 +129,6 @@ func ConsummerSendEmail() {
 
 	// Process message
 	for msg := range msgs {
-		helper.PanicIfError(err)
 		sendEmailRequest := web.SendEmailRequest{}
 		err := json.Unmarshal(msg.Body, &sendEmailRequest)
 		helper.PanicIfError(err)
