@@ -143,7 +143,7 @@ func GetRegisteredApp(idregister string) bool {
 func LogPublishDelay(recipient string, from string, scheduleTime int64, passTime string, wa bool, email bool, telegram bool, statusNotification bool) int {
 	tx := GetConnection2()
 	ctx := context.Background()
-	script := "insert into bot_notification_log(recipient, from, create_time, schedule_time, pass_time, wa, email, telegram, status_notification) values (?,?,?,?,?,?,?,?)"
+	script := "insert into bot_notification_log(recipient, `from`, create_time, schedule_time, pass_time, wa, email, telegram, status_notification) values (?,?,?,?,?,?,?,?,?)"
 	createTime := time.Now().UnixNano() / int64(time.Millisecond)
 	id, err := tx.ExecContext(ctx, script, recipient, from, createTime, scheduleTime, passTime, wa, email, telegram, statusNotification)
 	PanicIfError(err)
@@ -157,8 +157,8 @@ func LogPublishDelay(recipient string, from string, scheduleTime int64, passTime
 func UpdateStatusLogNotification(id int, passtime int64) {
 	tx := GetConnection2()
 	ctx := context.Background()
-	script := "update bot_notification_log set passtime = ?, status_notification = ? where id = ?"
+	script := "update bot_notification_log set pass_time = ?, status_notification = ? where id = ?"
 
-	_, err := tx.ExecContext(ctx, script, passtime, true, id)
+	_, err := tx.ExecContext(ctx, script, passtime, 1, id)
 	PanicIfError(err)
 }
