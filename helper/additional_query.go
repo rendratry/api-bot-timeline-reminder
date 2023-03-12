@@ -62,36 +62,40 @@ func GetIssuer(Iss interface{}) bool {
 func GetReceiverMahasiswa(id string) (domain.NotificationReceiver, error) {
 	tx := GetConnection2()
 	ctx := context.Background()
-	script := "select bot_user_mahasiswa.no_wa, id_telegram from bot_user_mahasiswa join mahasiswa on bot_user_mahasiswa.id_mahasiswa = mahasiswa.id_mhs where bot_user_mahasiswa.id_mahasiswa = ?"
-	stmt, err := tx.PrepareContext(ctx, script)
+	script := "select email, no_wa, id_telegram from bot_user_mahasiswa where id_mahasiswa = ?"
+	stmt, err := tx.QueryContext(ctx, script, id)
 	PanicIfError(err)
 	defer stmt.Close()
 
 	receiver := domain.NotificationReceiver{}
 
-	err = stmt.QueryRow(1).Scan(&receiver.Whatsapp, &receiver.Telegram, &receiver.Email)
-	if err != nil {
-		return receiver, err
+	if stmt.Next() {
+		err = stmt.Scan(&receiver.Email, &receiver.Whatsapp, &receiver.Telegram)
+		if err != nil {
+			return receiver, err
+		}
+		return receiver, nil
 	}
-
 	return receiver, nil
 }
 
 func GetReceiverStaff(id string) (domain.NotificationReceiver, error) {
 	tx := GetConnection2()
 	ctx := context.Background()
-	script := "select bot_user_staff.no_wa, id_telegram from bot_user_staff join staf on bot_user_staff.id_mahasiswa = staf.id_staf where bot_user_staff.id_staff = ?"
-	stmt, err := tx.PrepareContext(ctx, script)
+	script := "select email, no_wa, id_telegram from bot_user_staff where id_staff = ?"
+	stmt, err := tx.QueryContext(ctx, script, id)
 	PanicIfError(err)
 	defer stmt.Close()
 
 	receiver := domain.NotificationReceiver{}
 
-	err = stmt.QueryRow(1).Scan(&receiver.Whatsapp, &receiver.Telegram, &receiver.Email)
-	if err != nil {
-		return receiver, err
+	if stmt.Next() {
+		err = stmt.Scan(&receiver.Email, &receiver.Whatsapp, &receiver.Telegram)
+		if err != nil {
+			return receiver, err
+		}
+		return receiver, nil
 	}
-
 	return receiver, nil
 }
 
@@ -136,16 +140,25 @@ func GetRegisteredApp(idregister string) bool {
 	}
 }
 
-func LogPublishDelay(recipient string, scheduleTime int64, passTime string, wa bool, email bool, telegram bool, statusNotification bool) int {
+func LogPublishDelay(recipient string, from string, scheduleTime int64, passTime string, wa bool, email bool, telegram bool, statusNotification bool) int {
 	tx := GetConnection2()
 	ctx := context.Background()
-	script := "insert into bot_notification_log(recipient, create_time, schedule_time, pass_time, wa, email, telegram, status_notification) values (?,?,?,?,?,?,?)"
+	script := "insert into bot_notification_log(recipient, from, create_time, schedule_time, pass_time, wa, email, telegram, status_notification) values (?,?,?,?,?,?,?,?)"
 	createTime := time.Now().UnixNano() / int64(time.Millisecond)
-	id, err := tx.ExecContext(ctx, script, recipient, createTime, scheduleTime, passTime, wa, email, telegram, statusNotification)
+	id, err := tx.ExecContext(ctx, script, recipient, from, createTime, scheduleTime, passTime, wa, email, telegram, statusNotification)
 	PanicIfError(err)
 
 	lastId, err := id.LastInsertId()
 	PanicIfError(err)
 
 	return int(lastId)
+}
+
+func UpdateStatusLogNotification(id int, passtime int64) {
+	tx := GetConnection2()
+	ctx := context.Background()
+	script := "update bot_notification_log set passtime = ?, status_notification = ? where id = ?"
+
+	_, err := tx.ExecContext(ctx, script, passtime, true, id)
+	PanicIfError(err)
 }

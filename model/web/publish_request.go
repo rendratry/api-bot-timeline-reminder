@@ -9,9 +9,9 @@ type TimeDelay struct {
 }
 
 type Platform struct {
-	Whatsapp bool `validate:"required" json:"whatsapp"`
-	Telegram bool `validate:"required" json:"telegram"`
-	Email    bool `validate:"required" json:"email"`
+	Whatsapp bool `json:"whatsapp"`
+	Telegram bool `json:"telegram"`
+	Email    bool `json:"email"`
 }
 
 type PublishDelayRequest struct {

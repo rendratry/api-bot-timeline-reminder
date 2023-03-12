@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"github.com/streadway/amqp"
 	"log"
+	"time"
 )
 
 func RabbitMqConn() *amqp.Connection {
@@ -95,6 +96,7 @@ func ConsummerDelayRabbitMQ() {
 				platform()
 			}
 		}
+		helper.UpdateStatusLogNotification(publishDelayRequest.IdLog, time.Now().UnixNano()/int64(time.Millisecond))
 		log.Printf("Received message: %s", msg.Body)
 		msg.Ack(false)
 	}
